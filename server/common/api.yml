@@ -10,6 +10,8 @@ tags:
     description: Simple example endpoints
   - name: Specification
     description: The swagger API specification
+  - name: Issues
+    description: Simple issues endpoint
 paths:
   /examples:
     get:
