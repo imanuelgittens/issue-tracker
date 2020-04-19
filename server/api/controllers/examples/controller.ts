@@ -7,7 +7,7 @@ export class Controller {
   }
 
   byId(req: Request, res: Response): void {
-    const id = Number.parseInt(req.params['id'])
+    const id = Number.parseInt(req.params['id']);
     ExamplesService.byId(id).then(r => {
       if (r) res.json(r);
       else res.status(404).end();
@@ -19,7 +19,7 @@ export class Controller {
       res
         .status(201)
         .location(`/api/v1/examples/${r.id}`)
-        .json(r),
+        .json(r)
     );
   }
 }

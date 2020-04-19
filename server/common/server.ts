@@ -8,7 +8,6 @@ import l from './logger';
 
 import installValidator from './openapi';
 
-
 const app = express();
 const exit = process.exit;
 
@@ -18,8 +17,13 @@ export default class ExpressServer {
     const root = path.normalize(__dirname + '/../..');
     app.set('appPath', root + 'client');
     app.use(bodyParser.json({ limit: process.env.REQUEST_LIMIT || '100kb' }));
-    app.use(bodyParser.urlencoded({ extended: true, limit: process.env.REQUEST_LIMIT || '100kb' }));
-    app.use(bodyParser.text({ limit: process.env.REQUEST_LIMIT || '100kb'}));
+    app.use(
+      bodyParser.urlencoded({
+        extended: true,
+        limit: process.env.REQUEST_LIMIT || '100kb',
+      })
+    );
+    app.use(bodyParser.text({ limit: process.env.REQUEST_LIMIT || '100kb' }));
     app.use(cookieParser(process.env.SESSION_SECRET));
     app.use(express.static(`${root}/public`));
   }
@@ -36,12 +40,14 @@ export default class ExpressServer {
           'development'} @: ${os.hostname()} on port: ${p}}`
       );
 
-    installValidator(app, this.routes).then(() => {
-      http.createServer(app).listen(port, welcome(port));
-    }).catch(e => {
-      l.error(e);
-      exit(1)
-    });
+    installValidator(app, this.routes)
+      .then(() => {
+        http.createServer(app).listen(port, welcome(port));
+      })
+      .catch(e => {
+        l.error(e);
+        exit(1);
+      });
 
     return app;
   }
