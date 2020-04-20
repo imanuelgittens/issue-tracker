@@ -5,6 +5,8 @@ import http from 'http';
 import os from 'os';
 import cookieParser from 'cookie-parser';
 import l from './logger';
+import { Mongoose } from 'mongoose';
+import _Promise from 'bluebird';
 
 import installValidator from './openapi';
 
@@ -13,6 +15,7 @@ const exit = process.exit;
 
 export default class ExpressServer {
   private routes: (app: Application) => void;
+  private cxn: Mongoose;
   constructor() {
     const root = path.normalize(__dirname + '/../..');
     app.set('appPath', root + 'client');
@@ -33,8 +36,20 @@ export default class ExpressServer {
     return this;
   }
 
+  connectToDB(cxn: Promise<Mongoose>): ExpressServer {
+    _Promise
+      .resolve(cxn)
+      .then(() => {
+        l.info('Successfully connected to the database');
+      })
+      .catch(err =>
+        l.error('An error occurred while connecting to the database; ', err)
+      );
+    return this;
+  }
+
   listen(port: number): Application {
-    const welcome = (p: number) => () =>
+    const welcome = (p: number) => (): void =>
       l.info(
         `up and running in ${process.env.NODE_ENV ||
           'development'} @: ${os.hostname()} on port: ${p}}`

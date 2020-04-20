@@ -64,6 +64,21 @@ paths:
         200:
           description: Returns test text for now - 'all issues'
           content: {}
+    post:
+      tags:
+        - Issues
+      description: Create a new issue
+      requestBody:
+        description: an example
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueBody'
+        required: true
+      responses:
+        200:
+          description: Returns all Issues
+          content: {}
   /spec:
     get:
       tags:
@@ -79,6 +94,15 @@ components:
       required:
         - name
       type: object
+      properties:
+        name:
+          type: string
+          example: no_stress
+    IssueBody:
+      title: issue
+      required:
+        - name
+      type: string
       properties:
         name:
           type: string
